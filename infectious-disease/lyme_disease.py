@@ -21,10 +21,10 @@ dt = Datetime(locale=Locale.EN_CA)
 numeric = Numeric()
 text = Text()
 
-lyme_disease_fields = lambda num_rows, year: Schema(
+lyme_disease_fields = lambda num_rows, current_year: Schema(
     schema = lambda : {
         'client_id': numeric.increment(),
-        'gender': ['M', 'F', 'O'],
+        'gender': generic.choice(['M', 'F', 'O']),
         'age': generic.choice([i for i in range(1,100,1)]),
         'diagnosis_date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-5, end=current_year-1),
         'fever': generic.choice([True, False]),
@@ -37,4 +37,7 @@ lyme_disease_fields = lambda num_rows, year: Schema(
 
 if __name__ == "__main__":
     lyme_disease_schema = lyme_disease_fields(1000, 2023)
-    df = pd.DataFrame()
+    df = pd.DataFrame(lyme_disease_schema.create())
+    df.to_parquet("./lyme_disease.parquet", engine="pyarrow")
+
+
