@@ -2,6 +2,9 @@ import random
 from typing import List
 from pathlib import Path
 
+from options import health_unit, pt
+from utils import create_bucket, upload_blob
+
 from mimesis import Field, Fieldset, Schema
 from mimesis import Generic
 from mimesis import Address
@@ -10,8 +13,6 @@ from mimesis import Numeric
 from mimesis.locales import Locale
 from mimesis import Text
 from mimesis.providers.base import BaseProvider
-
-from options import health_unit, pt
 
 import pandas as pd
 
@@ -53,8 +54,22 @@ flu_watchers_reporting_fields = lambda num_rows, current_year: Schema(
 if __name__ == "__main__":
     flu_watch_schema = flu_watch_fields(1000, 2023)
     flu_watch_df = pd.DataFrame(flu_watch_schema.create())
-    flu_watch_df.to_parquet("../flu_watch.parquet", engine="pyarrow")
+    flu_watch_df.to_parquet("./data/flu_watch.parquet", engine="pyarrow")
 
     flu_watchers_schema = flu_watchers_reporting_fields(1000, 2023)
     flu_watchers_df = pd.DataFrame(flu_watchers_schema.create())
-    flu_watchers_df.to_parquet("../flu_watchers_reporting.parquet", engine="pyarrow")
+    flu_watchers_df.to_parquet("./data/flu_watchers_reporting.parquet", engine="pyarrow")
+
+    bucket_name = 'phx-dp-flu-watch'
+    create_bucket(bucket_name)
+
+    source_file_name = './data/flu_watchers_reporting.parquet'
+    destination_blob_name = 'flu_watchers_reporting.parquet'
+    upload_blob(bucket_name, source_file_name, destination_blob_name)
+
+    source_file_name = './data/flu_watch.parquet'
+    destination_blob_name = 'flu_watch.parquet'
+    upload_blob(bucket_name, source_file_name, destination_blob_name)
+
+
+    
