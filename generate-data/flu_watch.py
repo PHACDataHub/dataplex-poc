@@ -3,7 +3,7 @@ from typing import List
 from pathlib import Path
 
 from utils.options import health_unit, pt
-from utils.utils import create_bucket, upload_blob
+from utils.utils import save_to_bucket
 
 from mimesis import Field, Fieldset, Schema
 from mimesis import Generic
@@ -60,16 +60,26 @@ if __name__ == "__main__":
     flu_watchers_df = pd.DataFrame(flu_watchers_schema.create())
     flu_watchers_df.to_parquet("./data/flu_watchers_reporting.parquet", engine="pyarrow")
 
-    bucket_name = 'phx-dp-flu-watch'
-    create_bucket(bucket_name)
 
-    source_file_name = './data/flu_watchers_reporting.parquet'
-    destination_blob_name = 'flu_watchers_reporting.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    save_to_bucket('flu_watch.parquet','dataplexpoc-flu-watch-curated')
+    save_to_bucket('flu_watchers_reporting.parquet','dataplexpoc-flu-watchers-curated')
+  
+  
+# #  UPLOAD ASSET (in terminal)
+# export LAKE_NAME=infectious-diseases-nml-partnership
+# export ZONE_NAME=flu-watch-curated
 
-    source_file_name = './data/flu_watch.parquet'
-    destination_blob_name = 'flu_watch.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+# export ASSET_NAME=flu-watch
+# export BUCKET_NAME=dataplexpoc-flu-watch-curated
 
+# export ASSET_NAME=flu-watchers
+# export BUCKET_NAME=dataplexpoc-flu-watchers-curated
 
-    
+# gcloud dataplex assets create $ASSET_NAME \
+# --project=$PROJECT_ID \
+# --location=$LOCATION \
+# --lake=$LAKE_NAME \
+# --zone=$ZONE_NAME \
+# --resource-type=STORAGE_BUCKET \
+# --resource-name=projects/$PROJECT_ID/buckets/$BUCKET_NAME \
+# --discovery-enabled 

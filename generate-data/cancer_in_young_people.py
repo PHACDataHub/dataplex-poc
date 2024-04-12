@@ -101,4 +101,32 @@ if __name__ == "__main__":
     save_to_bucket('cancer_in_young_people_mortality.csv','dataplexpoc-cancer-in-young-people-mortality-raw')
     save_to_bucket('cancer_in_young_people_cases.parquet','dataplexpoc-cancer-in-young-people-cases-final')
     save_to_bucket('cancer_in_young_people_mortality.parquet','dataplexpoc-cancer-in-young-people-mortality-final')
- 
+
+
+# #  UPLOAD ASSET (in terminal)
+# export LAKE_NAME=health-promotion-and-chronic-disease-prevention
+
+# export ZONE_NAME=cancer-in-young-people-raw
+# export ASSET_NAME=cancer-in-young-people-cases-raw-table
+# export BUCKET_NAME=dataplexpoc-cancer-in-young-people-cases-raw
+
+# export ZONE_NAME=cancer-in-young-people-raw
+# export ASSET_NAME=cancer-in-young-people-mortality-raw-table
+# export BUCKET_NAME=dataplexpoc-cancer-in-young-people-mortality-raw
+
+# export ZONE_NAME=cancer-in-young-people-curated
+# export ASSET_NAME=cancer-in-young-people-cases-final-table
+# export BUCKET_NAME=dataplexpoc-cancer-in-young-people-cases-final
+
+# export ZONE_NAME=cancer-in-young-people-curated
+# export ASSET_NAME=cancer-in-young-people-mortality-final-table
+# export BUCKET_NAME=dataplexpoc-cancer-in-young-people-mortality-final
+
+# gcloud dataplex assets create $ASSET_NAME \
+# --project=$PROJECT_ID \
+# --location=$LOCATION \
+# --lake=$LAKE_NAME \
+# --zone=$ZONE_NAME \
+# --resource-type=STORAGE_BUCKET \
+# --resource-name=projects/$PROJECT_ID/buckets/$BUCKET_NAME \
+# --discovery-enabled 

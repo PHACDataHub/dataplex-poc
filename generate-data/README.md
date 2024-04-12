@@ -1,6 +1,6 @@
 # Sample Synthetic Data
 
-The focus here is to generate data in order to demonstrate Dataplex's functionality. While we are using the surveillance programs names, the data generated is based on over-simplfied, non-epidemilogical guestimates - they are more placeholders to surveillance data products, than actual representations.  
+The focus here is to generate data to demonstrate Dataplex's functionality. While we are using the surveillance programs names, the data generated is based on over-simplfied, non-epidemiological guestimates - they are more placeholders to surveillance data products, than actual representations.  
 
 ## Branches and Surveillance Programs
 

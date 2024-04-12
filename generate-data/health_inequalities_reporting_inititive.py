@@ -48,9 +48,9 @@ health_inequalities_raw_fields = lambda num_rows, current_year: Schema(
         'household_education': generic.choice(['less than high school', 'high school graduate', 'comunity college, technical school', 'university gaduate','missing']),
         'diabetes': generic.choice([1, 0]),
         'arthritis': generic.choice([1, 0]),
-        'heart disease': generic.choice([1, 0]),
+        'heart_disease': generic.choice([1, 0]),
         'hiv': generic.choice([1, 0]),
-        'lung cancer': generic.choice([1, 0]),
+        'lung_cancer': generic.choice([1, 0]),
     }
 )
 
@@ -60,9 +60,31 @@ if __name__ == "__main__":
     # Save to file
     health_inequalities_raw_schema = health_inequalities_raw_fields(1000, 2023)
     df = pd.DataFrame(health_inequalities_raw_schema.create())
-    df.to_csv("./data/health_inequalities_raw_schema.csv", index=False)
-    df.to_parquet("./data/health_inequalities_curated_schema.parquet", engine="pyarrow")
+    df.to_csv("./data/health_inequalities_raw.csv", index=False)
+    df.to_parquet("./data/health_inequalities_curated.parquet", engine="pyarrow")
 
     # Save to bucket
-    save_to_bucket('health_inequalities_raw_schema.csv','dataplexpoc-health_inequalities_raw')
-    save_to_bucket('health_inequalities_curated_schema.parquet','dataplexpoc-lhealth_inequalities_curated')
+    save_to_bucket('health_inequalities_raw.csv','dataplexpoc-health_inequalities_raw')
+    save_to_bucket('health_inequalities_curated.parquet','dataplexpoc-health_inequalities_curated')
+
+    
+# # #  UPLOAD ASSET (in terminal)
+# export LAKE_NAME=strategic-policy
+
+# export ZONE_NAME=health-inequalities-raw
+# export ASSET_NAME=health-inequalities-raw-table
+# export BUCKET_NAME=dataplexpoc-health_inequalities_raw
+
+# export ZONE_NAME=health-inequalities-curated
+# export ASSET_NAME=health-inequalities-curated-table
+# export BUCKET_NAME=dataplexpoc-health_inequalities_curated
+
+# gcloud dataplex assets create $ASSET_NAME \
+# --project=$PROJECT_ID \
+# --location=$LOCATION \
+# --lake=$LAKE_NAME \
+# --zone=$ZONE_NAME \
+# --resource-type=STORAGE_BUCKET \
+# --resource-name=projects/$PROJECT_ID/buckets/$BUCKET_NAME \
+# --discovery-enabled 
+ 

@@ -137,4 +137,29 @@ if __name__ == "__main__":
     save_to_bucket('wastewater.csv','dataplexpoc-wastewater-raw')
     save_to_bucket('wastewater.parquet','dataplexpoc-wastewater-curated')
     save_to_bucket('wastewater_infobase_extract.parquet','dataplexpoc-infobase-extract-curated')
+
+     
+# #  UPLOAD ASSET (in terminal)
+# export LAKE_NAME=national-microbiology-lab
+
+# export ZONE_NAME=covid-19-wastewater-raw
+# export ASSET_NAME=covid-19-wastewater-raw-table
+# export BUCKET_NAME=dataplexpoc-wastewater-raw
+
+# export ZONE_NAME=covid-19-wastewater-curated
+# export ASSET_NAME=covid-19-wastewater-cleaned-table
+# export BUCKET_NAME=dataplexpoc-wastewater-curated
+
+# export ZONE_NAME=covid-19-wastewater-curated
+# export ASSET_NAME=covid-19-wastewater-infobase-extract-table
+# export BUCKET_NAME=dataplexpoc-infobase-extract-curated
+
+# gcloud dataplex assets create $ASSET_NAME \
+# --project=$PROJECT_ID \
+# --location=$LOCATION \
+# --lake=$LAKE_NAME \
+# --zone=$ZONE_NAME \
+# --resource-type=STORAGE_BUCKET \
+# --resource-name=projects/$PROJECT_ID/buckets/$BUCKET_NAME \
+# --discovery-enabled 
  
