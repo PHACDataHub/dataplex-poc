@@ -31,7 +31,9 @@ def create_bucket(bucket_name):
 
         bucket = storage_client.bucket(bucket_name)
         # bucket.storage_class = "COLDLINE"
-        new_bucket = storage_client.create_bucket(bucket, location="NORTHAMERICA-NORTHEAST1")
+        # new_bucket = storage_client.create_bucket(bucket, location="NORTHAMERICA-NORTHEAST1")
+        new_bucket = storage_client.create_bucket(bucket, location="US-CENTRAL1")
+
 
         print(
             "Created bucket {} in {} with storage class {}".format(
@@ -41,4 +43,8 @@ def create_bucket(bucket_name):
         return new_bucket
 
 
-
+def save_to_bucket(file_name, bucket_name):
+    create_bucket(bucket_name)
+    source_file_name = f'./data/{file_name}'
+    destination_blob_name = file_name
+    upload_blob(bucket_name, source_file_name, destination_blob_name)

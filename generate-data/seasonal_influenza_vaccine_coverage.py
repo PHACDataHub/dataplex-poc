@@ -3,7 +3,7 @@ import random
 from typing import List
 from pathlib import Path
 
-from utils import create_bucket, upload_blob
+from utils.utils import save_to_bucket
 
 from mimesis import Field, Fieldset, Schema
 from mimesis import Generic
@@ -157,15 +157,15 @@ if __name__ == "__main__":
     # -- raw --
     ontario_raw_schema = ontario_raw_fields(1000, 2023)
     df = pd.DataFrame(ontario_raw_schema.create())
-    df.to_parquet("./data/ontario_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
+    df.to_csv("./data/ontario_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
 
     bc_raw_schema = bc_raw_fields(1000, 2023)
     df = pd.DataFrame(bc_raw_schema.create())
-    df.to_parquet("./data/bc_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
+    df.to_csv("./data/bc_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
 
     alberta_raw_schema = alberta_raw_fields(1000, 2023)
     df = pd.DataFrame(alberta_raw_schema.create())
-    df.to_parquet("./data/alberta_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
+    df.to_csv("./data/alberta_seasonal_influenza_vaccine_coverage_raw.csv", index=False)
 
     # -- cleaned --
     ontario_cleaned_schema = ontario_cleaned_fields(1000, 2023) 
@@ -194,41 +194,57 @@ if __name__ == "__main__":
     df.to_parquet("./data/alberta_seasonal_influenza_vaccine_coverage_final.parquet", engine="pyarrow")
 
     # save to bucket
-    bucket_name = 'phx-dp-seasonal_influenza_vaccine_coverage'
-    create_bucket(bucket_name)
+    save_to_bucket('ontario_seasonal_influenza_vaccine_coverage_raw.csv','dataplexpoc-ontario-seasonal_influenza_vaccine_coverage-raw')
+    save_to_bucket('bc_seasonal_influenza_vaccine_coverage_raw.csv','dataplexpoc-bc-seasonal_influenza_vaccine_coverage-raw')
+    save_to_bucket('alberta_seasonal_influenza_vaccine_coverage_raw.csv','dataplexpoc-alberta-seasonal_influenza_vaccine_coverage-raw')
 
-    source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_raw.csv"
-    destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_raw.csv'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    save_to_bucket('ontario_seasonal_influenza_vaccine_coverage_cleaned.parquet','dataplexpoc-ontario-seasonal_influenza_vaccine_coverage-cleaned')
+    save_to_bucket('bc_seasonal_influenza_vaccine_coverage_cleaned.parquet','dataplexpoc-bc-seasonal_influenza_vaccine_coverage-cleaned')
+    save_to_bucket('alberta_seasonal_influenza_vaccine_coverage_cleaned.parquet','dataplexpoc-alberta-seasonal_influenza_vaccine_coverage-cleaned')
+   
+    save_to_bucket('ontario_seasonal_influenza_vaccine_coverage_final.parquet','dataplexpoc-ontario-seasonal_influenza_vaccine_coverage-final')
+    save_to_bucket('bc_seasonal_influenza_vaccine_coverage_final.parquet','dataplexpoc-bc-seasonal_influenza_vaccine_coverage-final')
+    save_to_bucket('alberta_seasonal_influenza_vaccine_coverage_final.parquet','dataplexpoc-alberta-seasonal_influenza_vaccine_coverage-final')
+    
 
-    source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_raw.csv"
-    destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_raw.csv'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # bucket_name = 'phx-dp-seasonal_influenza_vaccine_coverage-raw'
+    # create_bucket(bucket_name)
 
-    source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_raw.csv"
-    destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_raw.csv'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_raw.csv"
+    # destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_raw.csv'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_cleaned.parquet"
-    destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_cleaned.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_raw.csv"
+    # destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_raw.csv'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_cleaned.parquet"
-    destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_cleaned.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_raw.csv"
+    # destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_raw.csv'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_cleaned.parquet"
-    destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_cleaned.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # bucket_name = 'phx-dp-seasonal_influenza_vaccine_coverage-curated'
+    # create_bucket(bucket_name)
 
-    source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_final.parquet"
-    destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_final.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_cleaned.parquet"
+    # destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_cleaned.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_final.parquet"
-    destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_final.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_cleaned.parquet"
+    # destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_cleaned.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_final.parquet"
-    destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_final.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
+    # source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_cleaned.parquet"
+    # destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_cleaned.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
+
+    # source_file_name = "./data/ontario_seasonal_influenza_vaccine_coverage_final.parquet"
+    # destination_blob_name = 'ontario_seasonal_influenza_vaccine_coverage_final.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
+
+    # source_file_name = "./data/bc_seasonal_influenza_vaccine_coverage_final.parquet"
+    # destination_blob_name = 'bc_seasonal_influenza_vaccine_coverage_final.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)
+
+    # source_file_name = "./data/alberta_seasonal_influenza_vaccine_coverage_final.parquet"
+    # destination_blob_name = 'alberta_seasonal_influenza_vaccine_coverage_final.parquet'
+    # upload_blob(bucket_name, source_file_name, destination_blob_name)

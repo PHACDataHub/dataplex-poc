@@ -69,5 +69,13 @@ vaccine_status = [
     'unknown'
 ]
 
+remoteness_index = [
+    'easliy accessible area',
+    'accessible areas',
+    'less accessible areas',
+    'remote areas',
+    'very remote areas',
+    'missing'
+]
 
 describe = ['White', 'Black', 'West Asian/Arab', 'South Asian (Indian, ...)', 'East/Southeast Asian (Chinese, ...)', 'Latin American/Hispanic', 'Aboriginal (First Nations, Métis, Inuit,)', 'Another race/Multiple', 'Not stated']

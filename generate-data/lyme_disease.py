@@ -2,7 +2,7 @@ import random
 from typing import List
 from pathlib import Path
 
-from utils import create_bucket, upload_blob
+from utils.utils import save_to_bucket
 
 from mimesis import Field, Fieldset, Schema
 from mimesis import Generic
@@ -47,7 +47,8 @@ lab_extract_fields = lambda num_rows, current_year: Schema(
         'Collection_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-3, end=current_year-1),
         # 'Resulted_Test_Codes_Description': generic.choice(res_test_code_desc),
         'Lab_Test_Results_Description': generic.choice(['confirmed', 'inconclusive',]),
-    },iterations=num_rows)
+    }
+)
 
 lyme_disease_fields = lambda num_rows, current_year: Schema(
     schema = lambda: {
@@ -66,34 +67,33 @@ lyme_disease_fields = lambda num_rows, current_year: Schema(
         'Collection_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-3, end=current_year-1),
         # 'Resulted_Test_Codes_Description': generic.choice(res_test_code_desc),
         'Lab_Test_Results_Description': generic.choice(['confirmed', 'inconclusive', 'NA']),
-    },iterations=num_rows)
+    }
+)
 
 if __name__ == "__main__":
+
+    # Save to file
     lyme_disease_reported_schema = lyme_disease_reporting_fields(1000, 2023)
     df = pd.DataFrame(lyme_disease_reported_schema.create())
+    df.to_csv("./data/lyme_disease_reported.csv", index=False)
     df.to_parquet("./data/lyme_disease_reported.parquet", engine="pyarrow")
 
     lyme_disease_lab_extract_schema = lab_extract_fields(1000, 2023)
     df = pd.DataFrame(lyme_disease_lab_extract_schema.create())
+    df.to_csv("./data/lyme_disease_lab_extract.csv", index=False)
     df.to_parquet("./data/lyme_disease_lab_extract.parquet", engine="pyarrow")
 
     lyme_disease_schema = lyme_disease_fields(1000, 2023)
     df = pd.DataFrame(lyme_disease_schema.create())
     df.to_parquet("./data/lyme_disease.parquet", engine="pyarrow")
 
-    bucket_name = 'phx-dp-lyme-disease'
-    create_bucket(bucket_name)
+    # Save to bucket
+    save_to_bucket('lyme_disease_reported.csv','dataplexpoc-lyme-disease-reported-raw')
+    save_to_bucket('lyme_disease_lab_extract.csv','dataplexpoc-lyme-disease-lab-extract-raw')
+    save_to_bucket('lyme_disease_reported.parquet','dataplexpoc-lyme-disease-reported-final')
+    save_to_bucket('lyme_disease_lab_extract.parquet','dataplexpoc-lyme-disease-lab-extract-final')
+    save_to_bucket('lyme_disease.parquet','dataplexpoc-lyme-disease-merged-final')
 
-    source_file_name = './data/lyme_disease_reported.parquet'
-    destination_blob_name = 'working/lyme_disease_reported.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
 
-    source_file_name = './data/lyme_disease_lab_extract.parquet'
-    destination_blob_name = 'working/lyme_disease_lab_extract.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
-
-    source_file_name = './data/lyme_disease.parquet'
-    destination_blob_name = 'final/lyme_disease.parquet'
-    upload_blob(bucket_name, source_file_name, destination_blob_name)
 
 

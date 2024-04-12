@@ -2,8 +2,8 @@ import random
 from typing import List
 from pathlib import Path
 
-from options import health_unit, pt
-from utils import create_bucket, upload_blob
+from utils.options import health_unit, pt
+from utils.utils import create_bucket, upload_blob
 
 from mimesis import Field, Fieldset, Schema
 from mimesis import Generic
