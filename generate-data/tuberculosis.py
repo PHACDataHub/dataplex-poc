@@ -214,4 +214,38 @@ if __name__ == "__main__":
     save_to_bucket('tuberculosis_outcomes.parquet','dataplexpoc-tuberculosis-outcomes-final')
     save_to_bucket('tuberculosis_merged_FINAL.parquet','dataplexpoc-tuberculosis-merged-final')
 
+# #  UPLOAD ASSET (in terminal)
+export LAKE_NAME=infectious-diseases
+export PROJECT_ID=phx-01h41bw3b0xsf9rmpzmxbee2s9
+export LOCATION=us-central1
 
+export ZONE_NAME=tuberculosis-raw
+export ASSET_NAME=tuberculosis-cases-raw-table
+export BUCKET_NAME=dataplexpoc-tuberculosis-cases-raw
+
+export ZONE_NAME=tuberculosis-raw
+export ASSET_NAME=tuberculosis-outcomes-raw-table
+export BUCKET_NAME=dataplexpoc-tuberculosis-outcomes-raw
+
+export ZONE_NAME=tuberculosis-curated
+export ASSET_NAME=tuberculosis-outcomes-final-table
+export BUCKET_NAME=dataplexpoc-tuberculosis-outcomes-final
+
+export ZONE_NAME=tuberculosis-curated
+export ASSET_NAME=tuberculosis-cases-final-table
+export BUCKET_NAME=dataplexpoc-tuberculosis-cases-final
+
+export ZONE_NAME=tuberculosis-curated
+export ASSET_NAME=tuberculosis-merged-final-table
+export BUCKET_NAME=dataplexpoc-tuberculosis-merged-final
+
+
+gcloud dataplex assets create $ASSET_NAME \
+--project=$PROJECT_ID \
+--location=$LOCATION \
+--lake=$LAKE_NAME \
+--zone=$ZONE_NAME \
+--resource-type=STORAGE_BUCKET \
+--resource-name=projects/$PROJECT_ID/buckets/$BUCKET_NAME \
+--discovery-enabled 
+ 

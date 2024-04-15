@@ -1,6 +1,6 @@
 # Sample Synthetic Data
 
-The focus here is to generate data to demonstrate Dataplex's functionality. While we are using the surveillance programs names, the data generated is based on over-simplfied, non-epidemiological guestimates - they are more placeholders.  
+The focus here is to generate data to demonstrate Dataplex's functionality. While we're using the surveillance programs names, the data generated is based on over-simplfied, non-epidemiological guestimates - please treat these more as placeholders.  
 
 ## Branches and Surveillance Programs
 
@@ -21,5 +21,5 @@ The focus here is to generate data to demonstrate Dataplex's functionality. Whil
 ### Health promotion and chronic disease prevention branch 
 * Cancer in young people
 
-### strategic policy branch 
+### Strategic policy branch 
 * Health Inequalities Reporting inititive
