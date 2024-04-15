@@ -13,7 +13,7 @@ In this proof of concept project, we're exploring
 ## Set up
 
 1. [Create Lakes](https://cloud.google.com/dataplex/docs/create-lake) 
-    * These correspond to PHAC branches (need a separate metastore per lake if using the explore features)
+    *  Lakes maps to a Data Mesh domain - here they correspond to PHAC branches (need a separate metastore per lake if using the explore features)
     * [Set up a Dataproc metastore service](https://cloud.google.com/dataplex/docs/create-lake#metastore) (select 'sync to data catalog' and enable grpc)
 
 2. [Create Zones](https://cloud.google.com/dataplex/docs/add-zone) within lakes - these correspond to Surveillance Program areas. 
@@ -21,8 +21,9 @@ In this proof of concept project, we're exploring
     * Enable [metadata discovery](https://cloud.google.com/dataplex/docs/add-zone#:~:text=the%20same%20zone.-,Optional,-%3A%20Enable%20metadata%20discovery) (allows Dataplex to automatically scan and extract metadata from Zone)
 
 3. Add data assets to zones 
-    * Flag managed 
+    * If adding from bucket, bucket location needs to be same as lake/zone.
     * Attach data assets from other projects: add [IAM to bucket](https://cloud.google.com/dataplex/docs/manage-assets#role-for-bucket) and [authorize bucket to dataplex](https://cloud.google.com/dataplex/docs/create-lake#access-control)
+    * Flag managed (if looking for  find grain security https://cloud.google.com/dataplex/docs/manage-assets#upgrade-asset )
 
 
 4. Table Entities
@@ -53,10 +54,7 @@ Characters
 * [Youtube overview](https://www.youtube.com/watch?v=j2hU_vkiWa0&t=970s)
 
 
-
-
-
-
+<!-- service-176013304796@gcp-sa-dataplex.iam.gserviceaccount.com -->
 
 
 
