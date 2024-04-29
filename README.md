@@ -28,20 +28,24 @@ In this proof-of-concept project, we explored using Dataplex to build out a PHAC
 1. [Create Lakes](https://cloud.google.com/dataplex/docs/create-lake) 
     *  Lakes maps to a Data Mesh domain - here they correspond to PHAC branches (need a separate metastore per lake if using the explore features)
     * ~~[Set up a Dataproc metastore service](https://cloud.google.com/dataplex/docs/create-lake#metastore) (select 'sync to data catalog' and enable grpc)~~ (The metastore is really for the 'Explore' feature, which we don't recomend at this point in time.)
+  
+     ![Data Lakes](img/dataplex-lakes.png)
 
 2. [Create Zones](https://cloud.google.com/dataplex/docs/add-zone) within lakes - these correspond to Surveillance Program areas. 
     * There are 2 tiers - raw zones (any format), and curated zones (strict typed format - eg BQ table/ parquet).
     * Enable [metadata discovery](https://cloud.google.com/dataplex/docs/add-zone#:~:text=the%20same%20zone.-,Optional,-%3A%20Enable%20metadata%20discovery) (allows Dataplex to automatically scan and extract metadata from Zone)
+ ![Data Zones](img/dataplex-zones.png)
 
 3. Add data assets to zones 
     * If adding from bucket, bucket location needs to be same as lake/zone.
     * Attach data assets from other projects: add [IAM to bucket](https://cloud.google.com/dataplex/docs/manage-assets#role-for-bucket) and [authorize bucket to dataplex](https://cloud.google.com/dataplex/docs/create-lake#access-control)
     * Flag managed (if looking for  find grain security https://cloud.google.com/dataplex/docs/manage-assets#upgrade-asset )
-
+ ![Data Assets](img/dataplex-assets.png)
 
 4. Table Entities
     * This is where you can view metadata, schema and tags
     * Note - dataplex creates a BQ table to store metadata when the asset represents a gcs bucket.
+![Data Entities](img/dataplex-entities.png)
 
 ## Interesting Features
 
@@ -49,6 +53,7 @@ In this proof-of-concept project, we explored using Dataplex to build out a PHAC
 
 #### Data Profiling 
 Generates statistics and spread for each field – option to export to BQ table
+![Data Profiling](img/dataplex-profiling.jpg)
 
 #### [Data Quality Tasks](https://cloud.google.com/dataplex/docs/check-data-quality)
 Can add assertions to datasets for data quality checks.
@@ -61,7 +66,8 @@ Uses [Data Quality Engine](https://github.com/GoogleCloudPlatform/cloud-data-qua
 #### [Auto Data Quality](https://cloud.google.com/dataplex/docs/auto-data-quality-overview)
 * used data profiling (statistical analysis of data - nulls, classes, sensitive etc and suggests ruls)duplicate, missing data, outliers
 * user defined rules and ql
-
+![Data Quality 1](img/dataplex-dataquality1.jpg)
+![Data Quality 2](img/dataplex-dataquality2.jpg)
 
 ### Tag and Tag Templates 
 
@@ -72,7 +78,7 @@ Tags can be are applied to the entire table (applied to every column on the tabl
 ### Data Catalog
 
 The Dataplex Metadata Role will be needed. Can search using [this syntax](https://cloud.google.com/data-catalog/docs/how-to/search-reference). There's a UI you can also use filter for various tags (ie data owner/ contact, PII, column name, data type)
-
+![data search](img/dataplex-search.jpg)
 ## Nuances 
 
 * Curated datasets require field name characters be in the set 0-9, _,  a-z, A-Z - no spaces, brackets or hyphens are accepted. 
