@@ -93,7 +93,8 @@ outfall_locations = [
 
 watewater_fields = lambda num_rows, current_year: Schema(
     schema = lambda: {
-        'outfall_id': numeric.increment(),
+        # 'outfall_id': numeric.increment(),
+        'site_id': numeric.increment(),
         'site_name': generic.choice(outfall_locations),
         'sample_date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-4, end=current_year),
         # 'concentration_of_SARS_CoV_2_gene_copies': generic.choice([str(i for i in range(0,10,0.2)), 'NA']),
@@ -108,7 +109,8 @@ watewater_fields = lambda num_rows, current_year: Schema(
 
 infobase_extract_fields = lambda num_rows, current_year: Schema(
     schema = lambda: {
-        'outfall_id': numeric.increment(),
+        # 'outfall_id': numeric.increment(),
+        'site_id': numeric.increment(),
         'site_name': generic.choice(outfall_locations),
         'sample_date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-4, end=current_year),
         'concentration_of_SARS_CoV_2_gene_copies': generic.choice([str(np.arange(0,10,0.2)), 'NA']),
