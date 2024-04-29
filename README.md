@@ -73,6 +73,8 @@ Uses [Data Quality Engine](https://github.com/GoogleCloudPlatform/cloud-data-qua
 
 Tag templates are used to have consistancy accorss all data products. Tags can be public (searchable) and private (only searchable/ viewable with permissions) tags.
 
+![Example Tag Template](img/dataplex_tag_template.jpg)
+
 Tags can be are applied to the entire table (applied to every column on the table), or individual columns. In the schema view, if you click on the tag, you can view the tag values. 
 
 ### Data Catalog
