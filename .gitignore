@@ -1,4 +1,5 @@
 .venv/
-sa-key.json
+*.json
 **/__pycache__/
 data/
+**/*.env

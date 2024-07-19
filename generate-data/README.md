@@ -23,3 +23,12 @@ The focus here is to generate data to demonstrate Dataplex's functionality. Whil
 
 ### Strategic policy branch 
 * Health Inequalities Reporting inititive
+
+Note - this has been re-worked to have one survellance activity per GCP project as Dataplex is active on the global plane. 
+
+* Activate venv and run p1 -> p4 files to create fake data, populate buckets and attach data assets to zones. 
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+```

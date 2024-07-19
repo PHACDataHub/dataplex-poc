@@ -2,7 +2,7 @@ import random
 from typing import List
 from pathlib import Path
 
-from utils.utils import save_to_bucket
+from utils.utils import save_to_bucket, attach_asset_to_zone
 from utils.options import health_unit, pt, self_described_health, vaccine_status
 
 from mimesis import Field, Fieldset, Schema
@@ -15,6 +15,14 @@ from mimesis import Text
 from mimesis.providers.base import BaseProvider
 
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+PROJECT_NAME = os.getenv('PROJECT4_NAME')
+PROJECT_ID = os.getenv('PROJECT4_ID')
+SERVICE_ACCOUNT_KEY_PATH = os.getenv('PROJECT4_SERVICE_ACCOUNT_KEY_PATH')
 
 field = Field(locale=Locale.EN_CA)
 fieldset = Fieldset(locale=Locale.EN_CA)
@@ -75,8 +83,19 @@ if __name__ == "__main__":
     df = pd.DataFrame(vaccine_survey_curated_schema.create())
     df.to_parquet("./data/survey_of_vaccination_during_pregancy.parquet", engine="pyarrow")
 
-    save_to_bucket('survey_of_vaccination_during_pregancy.csv','dataplexpoc-vaccination-during-pregancy-survey-raw')
-    save_to_bucket('survey_of_vaccination_during_pregancy.parquet','dataplexpoc-vaccination-during-pregancy-survey-curated')
+    zone_name= f'{PROJECT_NAME}-raw'
+    bucket_name = "survey-of-vaccination-during-pregnancy-raw"
+    save_to_bucket('survey_of_vaccination_during_pregancy.csv', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
 
+    
+    zone_name= f'{PROJECT_NAME}-curated'
+    bucket_name = "survey-of-vaccination-during-pregnancy-curated"
+    save_to_bucket('survey_of_vaccination_during_pregancy.parquet', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+
+    # save_to_bucket('survey_of_vaccination_during_pregancy.csv','dataplexpoc-vaccination-during-pregancy-survey-raw')
+    # save_to_bucket('survey_of_vaccination_during_pregancy.parquet','dataplexpoc-vaccination-during-pregancy-survey-curated')
 
 

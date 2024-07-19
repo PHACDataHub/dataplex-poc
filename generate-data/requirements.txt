@@ -1,0 +1,11 @@
+google-api-python-client
+python-dotenv
+pandas
+requests
+google-cloud-storage
+google-cloud
+google-auth 
+google-auth-oauthlib 
+google-auth-httplib2
+mimesis
+pyarrow
