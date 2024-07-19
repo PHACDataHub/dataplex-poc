@@ -1,21 +1,21 @@
 # Dataplex PoC
 
-[Dataplex](https://cloud.google.com/blog/products/data-analytics/build-a-data-mesh-on-google-cloud-with-dataplex-now-generally-available?utm_source=youtube&utm_medium=unpaidsoc&utm_campaign=fy22q1-googlecloudevents-blog-data-description-no-brand-global&utm_content=j2hU_vkiWa0-skyvine1026739764&utm_term=-) is a Google Cloud Platform (GCP) data fabric that “[unifies distributed data and automates data management and governance for that data](https://cloud.google.com/dataplex/docs/introduction)”. 
+[Dataplex](https://cloud.google.com/blog/products/data-analytics/build-a-data-mesh-on-google-cloud-with-dataplex-now-generally-available?utm_source=youtube&utm_medium=unpaidsoc&utm_campaign=fy22q1-googlecloudevents-blog-data-description-no-brand-global&utm_content=j2hU_vkiWa0-skyvine1026739764&utm_term=-) is a data fabric from Google Cloud Platform (GCP) that “[unifies distributed data and automates its management and governance.](https://cloud.google.com/dataplex/docs/introduction)”. 
 
-Dataplex can be used as a data catalog where the metadata/ schema is auto-extracted and kept up-to-date with the source data product, then  searchable and findable though a central console. Data quality can be ensured with the use of automated data quality checks.
+Dataplex can function as a data catalog. It automatically extracts and updates metadata and schemas from data products, making data searchable and easily accessible through a central console. Automated data quality checks ensure the reliability of the data.
 
-In this proof-of-concept project, we explored using Dataplex to build out a PHAC data mesh/ data catalog using Google Cloud Storage buckets and Big Query.  We created lakes, zones and attached [synthetic data products](https://github.com/PHACDataHub/dataplex-poc/tree/main/generate-data) (assets) to explore the IAM flow and various capabilities. 
+In this proof-of-concept project, we explored using Dataplex to build a PHAC data mesh and data catalog using Google Cloud Storage buckets and Big Query.  We created lakes, zones and attached [synthetic data products](https://github.com/PHACDataHub/dataplex-poc/tree/main/generate-data) (assets) to examine the IAM flow and various capabilities. 
 
-Dataplex is is fully managed, scalable and works on the global plane. This means data products can be added to the to the data mesh/ Data Catalog within their domain bounded GCP projects, giving domain owners full control over access while tag templates for metadata can be used across all products for consistent metadata governance. 
+Dataplex is fully managed, scalable, and operates on a global plane. This allows data products to be added to the data mesh or catalog within their domain-specific GCP projects, granting domain owners complete control over access. Consistent metadata governance is achieved through tag templates that can be used across all products.
 
 ## How it works:
 
 #### In the surveillance specific GCP project
 
-* Data owners store their data products in Google Cloud Storage Buckets (in Parquet, Avro, CSV, line-delimited JSON, or ORC (optimized row columnar)), or BigQuery tables, for automated schema discovery. Other formats can be used, but the schemas won't be added to Dataplex. 
-* Projects will come enabled with Dataplex, with one Lake and two zones (one for for each raw and curated data in their project). The data owners will attach the products they would like to share to a Dataplex Zone as assets. Tags are added to the data to add additional required metadata such as contact information if someone would like to request access. Note - this will only share the metadata and schema, users will still need to request, and be granted access to view the data. 
-* AllUsers (in PHAC) will be granted data catalog user roles at the Org folder level.
-* Users can search Dataplex (within their own project) for data sources in other in the PHAC organization. 
+* Data owners store their data products in Google Cloud Storage Buckets (in formats like Parquet, Avro, CSV, line-delimited JSON, or ORC), or BigQuery tables. These formats allow for automated schema discovery. Other formats can be used, but their schemas won't be added to Dataplex.
+*Projects will come with Dataplex enabled through Infrastructure as Code (IaC), featuring one Lake and two zones (one for raw data and one for curated data). Data owners can attach the products they want to share to a Dataplex Zone as assets. Tags can be added to provide additional metadata, such as contact information for access requests. Note: This will only share the metadata and schema; users will still need to request and be granted access to view the data. 
+* All users in PHAC will be granted data catalog user roles at the GCP Org folder level.
+* Users can search Dataplex catalog within their own project for data sources in other in the PHAC organization. 
 * Data owners assign permission to the dataplex project's service account with the Dataplex Service Agent role on the bucket, Big Query table (or project wide). This will allow Dataplex permissions to the data to extract the schema and metadata, as well as to manage IAM to the data from within the dataplex project (access would be granted by the data owner for that asset/ zone).
 
 ## How to start
