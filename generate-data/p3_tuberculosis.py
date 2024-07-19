@@ -2,7 +2,7 @@ import random
 from typing import List
 from pathlib import Path
 
-from utils.utils import save_to_bucket
+from utils.utils import save_to_bucket, attach_asset_to_zone
 from utils.options import health_unit, pt
 
 from mimesis import Field, Fieldset, Schema
@@ -15,6 +15,14 @@ from mimesis import Text
 from mimesis.providers.base import BaseProvider
 
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+PROJECT_NAME = os.getenv('PROJECT3_NAME')
+PROJECT_ID = os.getenv('PROJECT3_ID')
+SERVICE_ACCOUNT_KEY_PATH = os.getenv('PROJECT3_SERVICE_ACCOUNT_KEY_PATH')
 
 field = Field(locale=Locale.EN_CA)
 fieldset = Fieldset(locale=Locale.EN_CA)
@@ -133,12 +141,6 @@ episode_info_fields = lambda num_rows, current_year: Schema(
         'Client_Immigration_Country_From': address.country(),
         'Client_Immigration_Country_Last_Reside': address.country(),
         'Client_Immigration_Birth_Country': address.country(),
-        'Client_Immigration_Father_Birth_Country': address.country(),
-        'Client_Immigration_Mother_Birth_Country': address.country(),
-        'Client_Immigration_Country_Father_Last_Reside': address.country(),
-        'Client_Immigration_Country_Mother_Last_Reside': address.country(),
-        'Client_Immigration_Arrive_Date':  dt.formatted_date(fmt="%d-%m-%Y", start=current_year-20, end=current_year-1),
-        # 'Client Immigration Status at Arrival': generic.choice(imm_status_at_arr),  
         'Client_Immigration_Reported_Surveillance_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-5, end=current_year-1),
         'Episode_Updates_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-2, end=current_year-1), 
     }
@@ -179,12 +181,7 @@ merged_fields = lambda num_rows, current_year: Schema(
         'Client_Immigration_Country_From': address.country(),
         'Client_Immigration_Country_Last_Reside': address.country(),
         'Client_Immigration_Birth_Country': address.country(),
-        'Client_Immigration_Father_Birth_Country': address.country(),
-        'Client_Immigration_Mother_Birth_Country': address.country(),
-        'Client_Immigration_Country_Father_Last_Reside': address.country(),
-        'Client_Immigration_Country_Mother_Last_Reside': address.country(),
-        'Client_Immigration_Arrive_Date':  dt.formatted_date(fmt="%d-%m-%Y", start=current_year-20, end=current_year-1),
-        # 'Client Immigration Status at Arrival': generic.choice(imm_status_at_arr),  
+
         'Client_Immigration_Reported_Surveillance_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-5, end=current_year-1),
         'Episode_Updates_Date': dt.formatted_date(fmt="%d-%m-%Y", start=current_year-2, end=current_year-1), 
     }
@@ -207,12 +204,37 @@ if __name__ == "__main__":
     df = pd.DataFrame(tuberculosis_merged_schema.create())
     df.to_parquet("./data/tuberculosis_merged_FINAL.parquet", engine="pyarrow")
 
-    # Upload to bucket
-    save_to_bucket('tuberculosis_cases.csv','dataplexpoc-tuberculosis-cases-raw')
-    save_to_bucket('tuberculosis_cases.parquet','dataplexpoc-tuberculosis-cases-final')
-    save_to_bucket('tuberculosis_outcomes.csv','dataplexpoc-tuberculosis-outcomes-raw')
-    save_to_bucket('tuberculosis_outcomes.parquet','dataplexpoc-tuberculosis-outcomes-final')
-    save_to_bucket('tuberculosis_merged_FINAL.parquet','dataplexpoc-tuberculosis-merged-final')
+    # save to bucket and load asset
+
+    zone_name= f'{PROJECT_NAME}-raw'
+    bucket_name = "tuberculosis-raw"
+
+    save_to_bucket('tuberculosis_cases.csv', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+    save_to_bucket('tuberculosis_outcomes.csv', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+
+    zone_name= f'{PROJECT_NAME}-curated'
+    
+    bucket_name = "tuberculosis-final"
+
+    save_to_bucket('tuberculosis_cases.parquet', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+    save_to_bucket('tuberculosis_outcomes.parquet', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+    save_to_bucket('tuberculosis_merged_FINAL.parquet', bucket_name, SERVICE_ACCOUNT_KEY_PATH)
+    attach_asset_to_zone(PROJECT_ID, PROJECT_NAME, zone_name, asset_name=bucket_name, bucket_name=bucket_name, service_account_key_path=SERVICE_ACCOUNT_KEY_PATH)
+
+
+    # save_to_bucket('tuberculosis_cases.csv','dataplexpoc-tuberculosis-cases-raw')
+    # save_to_bucket('tuberculosis_outcomes.csv','dataplexpoc-tuberculosis-outcomes-raw')
+    # save_to_bucket('tuberculosis_cases.parquet','dataplexpoc-tuberculosis-cases-final')
+    # save_to_bucket('tuberculosis_outcomes.parquet','dataplexpoc-tuberculosis-outcomes-final')
+    # save_to_bucket('tuberculosis_merged_FINAL.parquet','dataplexpoc-tuberculosis-merged-final')
 
 # # #  UPLOAD ASSET (in terminal)
 # export LAKE_NAME=infectious-diseases
